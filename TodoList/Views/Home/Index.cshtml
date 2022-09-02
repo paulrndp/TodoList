@@ -2,36 +2,66 @@
     ViewData["Title"] = "Home Page";
 }
 <style>
+    .modal-backdrop.show {
+        opacity: 0.9;
+    }
 
+    .modal-header {
+        padding: 1rem;
+    }
 </style>
 <div class="container">
-<div class="row py-3">
-    <div class="col-lg-4 col-md-12">
-        <button class="btn btn-dark"><i class="bi bi-plus-square"></i> Add New</button>
+    <div class="row py-3">
+        <div class="col-lg-4 col-md-12">
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-plus-square"></i> Add New</button>
+        </div>
     </div>
 </div>
-</div>
 
 
-<div class="container py-3">
+<div class="container-lg py-3">
     <div class="row">
         <div class="col-lg-4">
             <h4 class="text-center"><i class="bi bi-person-rolodex"></i> ToDo</h4>
             <div class="card border-light mb-3">
                 <div class="card-header">Header</div>
                 <div class="card-body">
-                    <h4 class="card-title">Secondary card title</h4>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <i class="bi bi-calendar-week"></i> date
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check float-end">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault"> Active </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4">
-            <h4 class="text-center"><i class="bi bi-person-workspace"></i> Working</h4>
+            <h4 class="text-center"><i class="bi bi-person-workspace"></i> Today</h4>
             <div class="card border-warning mb-3">
                 <div class="card-header">Header</div>
                 <div class="card-body">
-                    <h4 class="card-title">Secondary card title</h4>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <i class="bi bi-calendar-week"></i> date
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check float-end">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault"> Done </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,11 +70,80 @@
             <div class="card border-success mb-3">
                 <div class="card-header">Header</div>
                 <div class="card-body">
-                    <h4 class="card-title">Success card title</h4>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-6">
+                            <i class="bi bi-calendar-week"></i> date
+                        </div>
+                        <div class="col-6">
+                            <div class="form-check float-end">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault"> Active </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-person-rolodex"></i> New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row py-1 align-items-center">
+                    <div class="col-4">
+                        <label class="col-form-label">Title</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="row py-1 align-items-center">
+                    <div class="col-4">
+                        <label class="col-form-label">Task</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea type="text" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row py-1 align-items-center">
+                    <div class="col-4">
+                        <label class="col-form-label">Date</label>
+                    </div>
+                    <div class="col-8">
+                        <div class="input-group d-flex justify-content-center ">
+
+                            <div id="datepicker"></div>
+
+                            @*<input type="text" id="datepicker" class="form-control">
+                            <span class="input-group-text"><i class="bi bi-calendar-week"></i></span>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
-
 </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datepicker').datepicker({
+            todayHighlight: true,
+        });
+
+    });
+</script> 
