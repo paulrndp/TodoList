@@ -30,7 +30,7 @@ namespace TodoList.Controllers
         // GET: TaskTbls/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.taskTbls == null)
+            if (id == null || _context.taskTbls == null) 
             {
                 return NotFound();
             }
@@ -117,7 +117,6 @@ namespace TodoList.Controllers
             }
             return View(taskTbl);
         }
-
         // GET: TaskTbls/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -135,7 +134,6 @@ namespace TodoList.Controllers
 
             return View(taskTbl);
         }
-
         // POST: TaskTbls/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -154,7 +152,6 @@ namespace TodoList.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool TaskTblExists(int id)
         {
           return (_context.taskTbls?.Any(e => e.Id == id)).GetValueOrDefault();

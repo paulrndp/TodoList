@@ -1,4 +1,6 @@
-﻿@{
+﻿@model TodoList.Models.TaskTbl
+
+@{
     ViewData["Title"] = "Home Page";
 }
 <style>
@@ -92,6 +94,7 @@
 <!--Modal-->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
+        <form asp-action="Create">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"><i class="bi bi-person-rolodex"></i> New Task</h5>
@@ -105,7 +108,7 @@
                         <label class="col-form-label">Title</label>
                     </div>
                     <div class="col-8">
-                        <input type="text" class="form-control">
+                        <input asp-for="Title" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="row py-1 align-items-center">
@@ -113,7 +116,7 @@
                         <label class="col-form-label">Task</label>
                     </div>
                     <div class="col-8">
-                        <textarea type="text" class="form-control"></textarea>
+                        <textarea asp-for="Task" type="text" class="form-control"></textarea>
                     </div>
                 </div>
                 <div class="row py-1 align-items-center">
@@ -122,23 +125,26 @@
                     </div>
                     <div class="col-8">
                         <div class="input-group d-flex justify-content-center ">
-                            <div id="datepicker"></div>
+                         <input asp-for="Date" id="getDate" type="text" class="form-control">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">Add</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
+         </form>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#datepicker').datepicker({
+    $(document).ready(function() 
+    {
+        $('#getDate').datepicker({
             todayHighlight: true,
         });
+        $("#getDate").datepicker( 'getDate' );
 
     });
 </script> 
