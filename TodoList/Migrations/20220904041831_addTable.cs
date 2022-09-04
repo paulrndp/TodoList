@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TodoList.Migrations
 {
-    public partial class AddTable : Migration
+    public partial class addTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

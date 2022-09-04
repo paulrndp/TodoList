@@ -12,8 +12,8 @@ using TodoList.Data;
 namespace TodoList.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220902135047_AddTable")]
-    partial class AddTable
+    [Migration("20220904041831_addTable")]
+    partial class addTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
