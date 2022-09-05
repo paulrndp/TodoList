@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TodoList.Data;
 using TodoList.Models;
-
+using TodoList.DAO;
 namespace TodoList.Controllers
 {
     public class HomeController : Controller
@@ -17,26 +18,26 @@ namespace TodoList.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public IActionResult GetTask()
+        public JsonResult GetAll()
         {
-            var res = _db.taskTbls.Where(x=>x.Status == "pending").Select(x =>x).ToList();
-            return Ok(res);
+            List<TaskTbl> _list = new TaskDAO(_db).GetAll();
+            return Json(_list);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Task,Status,Date")] TaskTbl taskTbl)
+        public JsonResult GetById(int id)
         {
-            if (ModelState.IsValid)
-            {
-                taskTbl.Status = "pending";
-               
-                _db.Add(taskTbl);
-                await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(taskTbl);
+            TaskTbl _list = new TaskDAO(_db).GetById(id);     
+            return Json(_list);
         }
-
+        public JsonResult Save(TaskTbl obj)
+        {
+            string _list = new TaskDAO(_db).Save(obj);
+            return Json(_list);
+        }
+        public JsonResult Remove(int id)
+        {
+            string _list = new TaskDAO(_db).Remove(id);
+            return Json(_list);
+        }
+        
     }
 }

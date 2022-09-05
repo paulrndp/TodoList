@@ -8,7 +8,7 @@
     function LoadData() {
         var section = '';
         $.ajax({
-            url: '/Home/GetTask',
+            url: '/Home/GetAll',
             method: 'GET',
             success: (result) => {
                 $.each(result, (k, v) => {
@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-6">
                                 <div class="float-end">
-                                    <button type="button" class="btn btn-sm btn-outline-success">Active</button>
+                                    <button onclick="return Edit()" type="button" class="btn btn-sm btn-outline-success">click</button>
                                     <button type="button" class="btn btn-sm btn-outline-danger">Delete</button>
                                 </div>
                             </div>
@@ -42,5 +42,33 @@
             }
         });
 
-    }
+    };
+
+
+
+
+
 });
+function Active() {
+    var name = $('#userName').val();
+    var desc = $('#userDesc').val();
+
+    var userData = new Object();
+    userData.name = name;
+    userData.description = desc;
+
+
+    $.ajax({
+        url: '/Home/Save',
+        type: 'POST',
+        data: userData,
+        success(data) {
+            if (data == 'pass') {
+                $('#newModal').modal('hide');
+                LoadData();
+            } else {
+                alert('error');
+            }
+        }
+    });
+};
