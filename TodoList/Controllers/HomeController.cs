@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using TodoList.Data;
 using TodoList.Models;
-using TodoList.DAO;
 using TodoList.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
@@ -25,48 +22,67 @@ namespace TodoList.Controllers
         {
             return View();
         }
-        public JsonResult GetPending()
+        [HttpGet]
+        public IActionResult GetPending()
         {
-            List<TaskTbl> _list = new TaskDAO(_db, _signalrHub).GetPending();
-            return Json(_list);
+            var res = _db.taskTbls.Where(x=>x.Status == "pending").Select(all => all).ToList();
+            return Ok(res);
+        }          
+        [HttpGet]
+        public IActionResult GetActive()
+        {
+            var res = _db.taskTbls.Where(x=>x.Status == "active").Select(all => all).ToList();
+            return Ok(res);
+        }          [HttpGet]
+        public IActionResult GetDone()
+        {
+            var res = _db.taskTbls.Where(x=>x.Status == "done").Select(all => all).ToList();
+            return Ok(res);
         }        
-        public JsonResult GetActive()
-        {
-            List<TaskTbl> _list = new TaskDAO(_db, _signalrHub).GetActive();
-            return Json(_list);
-        }        
-        public JsonResult GetDone()
-        {
-            List<TaskTbl> _list = new TaskDAO(_db, _signalrHub).GetDone();
-            return Json(_list);
-        }
-        public JsonResult GetById(int id)
-        {
-            TaskTbl _list = new TaskDAO(_db, _signalrHub).GetById(id);     
-            return Json(_list);
-        }
-        public JsonResult Save(TaskTbl obj)
-        {
-            string _list = new TaskDAO(_db, _signalrHub).Save(obj);
-            return Json(_list);
-        }
-        public JsonResult Remove(int id)
-        {
-            string _list = new TaskDAO(_db, _signalrHub).Remove(id);
-            return Json(_list);
-        }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Item,Category,Price,Qty")] TaskTbl obj)
+        public async Task<IActionResult> Save(TaskTbl obj)
         {
-            if (ModelState.IsValid)
+            string Result = string.Empty;
+            var query = _db.taskTbls.FirstOrDefault(x=>x.Id == obj.Id);
+
+            if (query != null)
             {
+                query.Status = obj.Status;
+               await _db.SaveChangesAsync();
+               await _signalrHub.Clients.All.SendAsync("LoadData");
+                Result = "pass";
+            }
+            else
+            {
+                TaskTbl data = new TaskTbl
+                {
+                    Title = obj.Title,
+                    Task = obj.Task,
+                    Status = obj.Status,
+                    Date = obj.Date,
+                };
                 _db.Add(obj);
                 await _db.SaveChangesAsync();
-                await _signalrHub.Clients.All.SendAsync("LoadProducts");
+                await _signalrHub.Clients.All.SendAsync("LoadData");
+                Result = "pass";
                 return RedirectToAction(nameof(Index));
             }
             return View(obj);
+        }
+        public async Task<IActionResult> Remove(int id)
+        {
+
+            var query = await _db.taskTbls.FindAsync(id);
+            if (query != null)
+            {
+                _db.taskTbls.Remove(query);
+                await _signalrHub.Clients.All.SendAsync("LoadData");
+
+            }
+
+            await _db.SaveChangesAsync();
+            await _signalrHub.Clients.All.SendAsync("LoadData");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

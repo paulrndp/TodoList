@@ -3,8 +3,12 @@
     connection.start();
     connection.on("LoadData", function () {
         LoadPending();
+        LoadActive();
+        LoadDone();
     });
     LoadPending();
+    LoadActive();
+    LoadDone();
 })
 
 
@@ -14,7 +18,7 @@ function Clear() {
     $('#Date').val('');
     $("#canvaClose").trigger("click");
 
-}
+};
 
 function LoadPending() {
     var section = '';
@@ -132,7 +136,6 @@ function Add() {
     var task = $('#Task').val();
     var date = $('#Date').val();
 
-
     var objData = new Object();
     objData.title = title;
     objData.task = task;
@@ -145,11 +148,8 @@ function Add() {
         data: objData,
         success(data) {
             if (data == "pass") {
-                LoadPending();
-
                 Clear();
             }
-
         },
         error(error) {
             console.log(error);
@@ -168,9 +168,7 @@ $(document).on('click', '#toPending', function () {
         type: 'POST',
         data: objData,
         success(data) {
-            LoadActive();
-            LoadPending();
-            LoadDone();
+            Clear();
             console.log(data);
         },
         error(error) {
@@ -192,9 +190,6 @@ $(document).on('click', '#toActive', function ()
         type: 'POST',
         data: objData,
         success(data) {
-            LoadActive();
-            LoadPending();
-            LoadDone();
             console.log(data);
         },
         error(error) {
@@ -215,9 +210,6 @@ $(document).on('click', '#toDone', function () {
         type: 'POST',
         data: objData,
         success(data) {
-            LoadActive();
-            LoadPending();
-            LoadDone();
             console.log(data);
         },
         error(error) {
@@ -226,6 +218,8 @@ $(document).on('click', '#toDone', function () {
     });
 
 });
+
+//remove
 $(document).on('click', '#toRemove', function () {
     Swal.fire({
         title: 'Are you sure?',
