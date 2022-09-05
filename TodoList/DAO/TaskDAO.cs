@@ -1,18 +1,33 @@
 ﻿using TodoList.Data;
 using TodoList.Models;
+using TodoList.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TodoList.DAO
 {
     public class TaskDAO
     {
         private readonly ApplicationDbContext _db;
-        public TaskDAO(ApplicationDbContext db)
+        private readonly IHubContext<TaskHub> _signalrHub;
+
+        public TaskDAO(ApplicationDbContext db, IHubContext<TaskHub> signalrHub)
         {
             _db = db;
+            _signalrHub = signalrHub;
         }
-        public List<TaskTbl> GetAll()
+        public List<TaskTbl> GetPending()
         {
-            return _db.taskTbls.ToList();
+            return _db.taskTbls.Where(x => x.Status == "pending").Select(all => all).ToList();
+
+        }        
+        public List<TaskTbl> GetActive()
+        {
+            return _db.taskTbls.Where(x => x.Status == "active").Select(all => all).ToList();
+        }        
+        public List<TaskTbl> GetDone()
+        {
+            return _db.taskTbls.Where(x => x.Status == "done").Select(all => all).ToList();
         }
         public TaskTbl GetById(int id)
         {
@@ -38,24 +53,30 @@ namespace TodoList.DAO
             var query = _db.taskTbls.FirstOrDefault(x => x.Id == obj.Id);
             if (query != null)
             {
-                //query.Name = obj.Name;
-                //query.Description = obj.Description;
+                query.Status = obj.Status;
                 _db.SaveChanges();
+                _signalrHub.Clients.All.SendAsync("LoadProducts");
                 Result = "pass";
             }
             else
             {
-                TaskTbl user = new TaskTbl
+                TaskTbl data = new TaskTbl
                 {
-                    //Name = obj.Name,
-                    //Description = obj.Description,
+                    Title = obj.Title,
+                    Task = obj.Task,
+                    Status = obj.Status,
+                    Date = obj.Date,
                 };
-                _db.taskTbls.Add(user);
+                _db.taskTbls.Add(data);
                 _db.SaveChanges();
+                _signalrHub.Clients.All.SendAsync("LoadProducts");
                 Result = "pass";
             }
             return Result;
         }
+
+
+
     }
 
 }
